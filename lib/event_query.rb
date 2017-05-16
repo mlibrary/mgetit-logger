@@ -10,7 +10,19 @@ class EventQuery
 
   def event_log(start_time, end_time)
     events(start_time, end_time).map do |event|
+      fix_dates(event)
       serialize(event)
+    end
+  end
+
+  # None of the attempts to get the JSON or Oj gems to render the dates
+  # as proper ISO8601 strings worked, so we force it with this hack.
+  def fix_dates(event)
+    if event['request_time']
+      event['request_time'] = event['request_time'].iso8601
+    end
+    if event['click_time']
+      event['click_time'] = event['click_time'].iso8601
     end
   end
 
