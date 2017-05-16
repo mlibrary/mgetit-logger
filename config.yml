@@ -1,0 +1,8 @@
+---
+database:
+  host: localhost
+  username: root
+  database: mgetit
+  database_timezone: :utc
+timestamp_file: timestamp.yml
+
