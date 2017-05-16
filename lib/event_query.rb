@@ -2,8 +2,10 @@ require 'mysql2'
 require 'json'
 
 class EventQuery
-  def initialize(config = nil)
-    configure(config) if config
+  attr_reader :config
+
+  def initialize(config = {})
+    @config = database_defaults.merge config
   end
 
   def event_log(start_time, end_time)
@@ -44,14 +46,11 @@ class EventQuery
     @client ||= Mysql2::Client.new(config)
   end
 
-  def config
-    @config ||= {host: 'localhost', username: 'root', database: 'mgetit'}
+  def database_defaults
+    {
+      host: 'localhost', username: 'root', database: 'mgetit',
+      database_timezone: :utc, application_timezone: :local
+    }
   end
-
-  private
-  
-    def configure(config)
-      @config = config['database']
-    end
 end
 

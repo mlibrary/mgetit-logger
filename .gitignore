@@ -1,0 +1,5 @@
+.*.swp
+.bundle/
+config.yml
+database.yml
+timestamp.yml
