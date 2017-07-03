@@ -1,0 +1,81 @@
+{
+  "mappings": {
+    "mgetit": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "@version": {
+          "type": "keyword"
+        },
+        "click_time": {
+          "type": "date"
+        },
+        "client_ip_addr": {
+          "type": "ip"
+        },
+        "host": {
+          "type": "keyword"
+        },
+        "issn": {
+          "type": "keyword"
+        },
+        "path": {
+          "type": "keyword"
+        },
+        "session_id": {
+          "type": "keyword"
+        },
+        "referrent_id": {
+          "type": "long"
+        },
+        "referrer_id": {
+          "type": "keyword"
+        },
+        "request_id": {
+          "type": "long"
+        },
+        "request_time": {
+          "type": "date"
+        },
+        "service_id": {
+          "type": "keyword"
+        },
+        "service_response_id": {
+          "type": "long"
+        },
+        "service_type_value_name": {
+          "type": "keyword"
+        },
+        "tags": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 512
+            }
+          }
+        },
+        "type": {
+          "type": "keyword"
+        },
+        "volume": {
+          "type": "text"
+        },
+        "year": {
+          "type": "short"
+        }
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "number_of_shards": "1",
+      "number_of_replicas": "1"
+    }
+  }
+}
+
