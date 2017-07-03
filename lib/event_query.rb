@@ -9,9 +9,9 @@ class EventQuery
   end
 
   def event_log(start_time, end_time)
-    events(start_time, end_time).map do |event|
+    events(start_time, end_time).each do |event|
       fix_dates(event)
-      serialize(event)
+      yield serialize(event)
     end
   end
 
@@ -35,16 +35,20 @@ class EventQuery
   end
 
   def between(start_time, end_time)
-    between_query.execute(start_time, end_time)
+    client.query(between_query(mysql_time(start_time), mysql_time(end_time)), stream: true, cache_rows: false)
   end
 
-  def between_query
-    @query ||= client.prepare(ALL_EVENTS + " WHERE c.created_at >= ? AND c.created_at < ? ")
+  def mysql_time(time)
+    time.utc.strftime("%Y-%m-%d %H:%M:%S")
+  end
+
+  def between_query(start_time, end_time)
+    ALL_EVENTS + " WHERE c.created_at >= '#{client.escape(start_time)}' AND c.created_at < '#{client.escape(end_time)}'"
   end
 
   ALL_EVENTS =<<~EOQ
     SELECT
-    req.id request_id, req.referrer_id, req.client_ip_addr,
+    req.id request_id, req.session_id, req.referrer_id, req.client_ip_addr,
     ref.id referrent_id, ref.title, ref.issn, ref.year, ref.volume,
     sr.id service_response_id, sr.service_id, sr.service_type_value_name,
     req.created_at request_time, c.created_at click_time
@@ -61,7 +65,7 @@ class EventQuery
   def database_defaults
     {
       host: 'localhost', username: 'root', database: 'mgetit',
-      database_timezone: :utc, application_timezone: :local
+      database_timezone: :utc, application_timezone: :local, stream: true
     }
   end
 end

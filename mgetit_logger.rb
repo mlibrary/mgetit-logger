@@ -28,6 +28,8 @@ start_time = last_time || Time.parse('2016-01-01 00:00:00 Z')
 end_time   = Time.now.utc
 
 eq = EventQuery.new(db_config)
-puts eq.event_log(start_time, end_time)
+eq.event_log(start_time, end_time) do |event|
+  puts event
+end
 File.write(ts_file, {'last_time' => end_time}.to_yaml)
 
